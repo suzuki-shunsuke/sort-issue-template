@@ -30,5 +30,3 @@ jobs:
         run: sort-issue-template -help
       - name: Test version
         run: sort-issue-template -version
-      - name: Test
-        run: sort-issue-template
