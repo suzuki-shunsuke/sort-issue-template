@@ -213,8 +213,3 @@ func (r *Runner) openEditor(ctx context.Context, editor, filepath string) error 
 	}
 	return nil
 }
-
-type Line struct {
-	Filename      string
-	AfterFilename string
-}
