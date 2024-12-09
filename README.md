@@ -1,10 +1,12 @@
 # sort-issue-template
 
-`sort-issue-template` is a CLI to rename GitHub Issue Templates using a text editor to sort them.
+`sort-issue-template` is a CLI to change the order of GitHub Issue Templates using a text editor by renaming template files.
 
 e.g. https://github.com/aquaproj/aqua/issues/new/choose
 
 <img width="1334" alt="image" src="https://github.com/user-attachments/assets/15f2eb61-2a6f-4b3e-83f9-7d283777a401">
+
+Please run this tool in the repository root directory and change the order of templates as you like!
 
 ## Motivation
 
