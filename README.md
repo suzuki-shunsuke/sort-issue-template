@@ -1,5 +1,7 @@
 # sort-issue-template
 
+[MIT LICENSE](LICENSE) | [Install](INSTALL.md)
+
 `sort-issue-template` is a CLI to change the order of GitHub Issue Templates using a text editor by renaming template files.
 
 e.g. https://github.com/aquaproj/aqua/issues/new/choose
@@ -14,12 +16,6 @@ Sometimes you would like to change the order of GitHub Issue Templates.
 [You can change the order by renaming issue templates](https://docs.github.com/en/communities/using-templates-to-encourage-useful-issues-and-pull-requests/configuring-issue-templates-for-your-repository#changing-the-order-of-templates).
 But it's a bit bothersome to rename files.
 Using `sort-issue-template`, you can rename them using a text editor.
-
-## Install
-
-```sh
-go install github.com/suzuki-shunsuke/sort-issue-template/cmd/sort-issue-template@latest
-```
 
 ## How to use
 
