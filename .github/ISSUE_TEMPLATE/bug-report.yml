@@ -1,0 +1,62 @@
+name: Bug Report
+description: |
+  Please report a bug of sort-issue-template.
+  If you're not sure if it's a bug or not, please use the template `Support Request` instead.
+labels:
+  - bug
+body:
+  - type: textarea
+    id: version
+    attributes:
+      label: The version of sort-issue-template
+      description: |
+        Please use the latest version.
+      value: |
+        ```console
+        $ sort-issue-template -version
+
+        ```
+    validations:
+      required: true
+  - type: textarea
+    id: overview
+    attributes:
+      label: Overview
+    validations:
+      required: true
+  - type: textarea
+    id: how-to-reproduce
+    attributes:
+      label: How to reproduce
+      description: |
+        Please see [the guide](https://github.com/suzuki-shunsuke/oss-contribution-guide#write-good-how-to-reproduce) too.
+      value: |
+        ```console
+        $ ls .github/ISSUE_TEMPLATE
+        ```   
+
+        Executed command and output
+
+        ```console
+        $ sort-issue-template
+        ```
+    validations:
+      required: true
+  - type: textarea
+    id: expected-behaviour
+    attributes:
+      label: Expected behaviour
+    validations:
+      required: true
+  - type: textarea
+    id: actual-behaviour
+    attributes:
+      label: Actual behaviour
+    validations:
+      required: true
+  - type: textarea
+    id: note
+    attributes:
+      label: Note
+    validations:
+      required: false
