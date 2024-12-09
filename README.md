@@ -97,7 +97,7 @@ general.yml
 
 Close the editor. Then template files are renamed.
 
-```sh
+```console
 $ sort-issue-template
 01-bug-report.yml
 02-feature-request.yml
