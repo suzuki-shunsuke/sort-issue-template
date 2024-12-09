@@ -27,10 +27,11 @@ Run `sort-issue-template` in the repository root directory.
 sort-issue-template
 ```
 
-sort-issue-template creates a temporary file and opens it using a text editor.
+`sort-issue-template` creates a temporary file and opens it using a text editor.
 Please change the order of lines in the file as you like and save and close the file.
-Then sort-issue-template renames Issue templates to change the order.
+Then `sort-issue-template` renames Issue templates to change the order.
 Please commit the change using Git and push the change to the default branch.
+If the temporary file isn't changed or all lines are deleted, templates aren't renamed.
 
 By default, the editor is `vi`.
 You can change the editor via the command line option `-editro` or the environment variable `EDITOR`.
