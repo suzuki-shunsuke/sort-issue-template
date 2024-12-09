@@ -35,7 +35,7 @@ type OSFS struct{}
 
 func (fs *OSFS) Open(name string) (fs.File, error) {
 	f, err := os.Open(name)
-	return f, err
+	return f, err //nolint:wrapcheck
 }
 
 const waitDelay = 1000 * time.Hour
@@ -59,7 +59,7 @@ Options:
 	-editor		Editor to sort issue templates
 	-separator 	Separator in file names`
 
-func (r *Runner) Run(ctx context.Context, args ...string) error { //nolint:funlen
+func (r *Runner) Run(ctx context.Context, _ ...string) error { //nolint:funlen,cyclop
 	flg := &Flag{}
 	parseFlags(flg)
 	if flg.Version {
@@ -84,7 +84,7 @@ func (r *Runner) Run(ctx context.Context, args ...string) error { //nolint:funle
 	defer tempFile.Close()
 	defer os.Remove(tempFileName)
 	// Write issue template file names to the temporary file
-	if err := os.WriteFile(tempFileName, []byte(strings.Join(files, "\n")), 0o644); err != nil { //nolint:mnd
+	if err := os.WriteFile(tempFileName, []byte(strings.Join(files, "\n")), 0o644); err != nil { //nolint:mnd,gosec
 		return fmt.Errorf("write the issue template file names to the temporary file: %w", err)
 	}
 	// Open the temporary file using the editor
@@ -209,7 +209,7 @@ func (r *Runner) openEditor(ctx context.Context, editor, filepath string) error 
 	}
 	cmd.WaitDelay = waitDelay
 	if err := cmd.Run(); err != nil {
-		return fmt.Errorf("open the temporary file using the editor")
+		return fmt.Errorf("open the temporary file using the editor: %w", err)
 	}
 	return nil
 }

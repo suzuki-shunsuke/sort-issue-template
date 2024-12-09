@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"log"
 	"os"
 	"os/signal"
 	"syscall"
@@ -17,6 +18,7 @@ var (
 
 func main() {
 	if err := core(); err != nil {
+		log.Fatal(err)
 	}
 }
 
