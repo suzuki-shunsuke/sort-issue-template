@@ -1,0 +1,96 @@
+---
+name: wc-test
+on:
+  workflow_call:
+    secrets:
+      gh_app_id:
+        required: true
+      gh_app_private_key:
+        required: true
+
+jobs:
+  test:
+    timeout-minutes: 30
+    runs-on: ubuntu-latest
+    permissions: {}
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - uses: actions/setup-go@41dfa10bad2bb2ae585af6ee5bb4d7d973ad74ed # v5.1.0
+        with:
+          go-version-file: go.mod
+      - uses: aquaproj/aqua-installer@f13c5d2f0357708d85477aabe50fd3f725528745 # v3.1.0
+        with:
+          aqua_version: v2.38.2
+      - run: golangci-lint run --timeout 120s
+        env:
+          AQUA_GITHUB_TOKEN: ${{github.token}}
+      - run: go test -v ./... -race -covermode=atomic
+      - run: go install ./cmd/sort-issue-template
+      - name: Test help
+        run: sort-issue-template help
+      - name: Test version
+        run: sort-issue-template version
+      - name: Test version -json
+        run: sort-issue-template version -json
+      - name: Test get-discussion
+        run: sort-issue-template get-discussion https://github.com/suzuki-shunsuke/test-sort-issue-template/discussions/1 > discussions.json
+        env:
+          GITHUB_TOKEN: ${{github.token}}
+      - name: Test get-discussion -query
+        run: sort-issue-template get-discussion -query 'repo:"suzuki-shunsuke/test-sort-issue-template"'
+        env:
+          GITHUB_TOKEN: ${{github.token}}
+
+      - name: Test dry run
+        run: sort-issue-template run -repo-name test-sort-issue-template -data discussions.json -dry-run
+        if: |
+          !(github.event_name == 'pull_request' && github.event.pull_request.head.repo.fork)
+        env:
+          GITHUB_TOKEN: ${{github.token}}
+
+      - uses: tibdex/github-app-token@3beb63f4bd073e61482598c45c71c1019b59b73a # v2.1.0
+        id: token
+        if: |
+          !(github.event_name == 'pull_request' && github.event.pull_request.head.repo.fork)
+        with:
+          app_id: ${{secrets.gh_app_id}}
+          private_key: ${{secrets.gh_app_private_key}}
+          permissions: >-
+            {
+              "issues": "write"
+            }
+          repositories: >-
+            [
+              "test-sort-issue-template"
+            ]
+      - name: Test run -data
+        run: sort-issue-template run -data discussions.json
+        if: |
+          !(github.event_name == 'pull_request' && github.event.pull_request.head.repo.fork)
+        env:
+          GITHUB_TOKEN: ${{steps.token.outputs.token}}
+
+      - name: Test run -query
+        run: sort-issue-template run -q 'repo:"suzuki-shunsuke/test-sort-issue-template"'
+        if: |
+          !(github.event_name == 'pull_request' && github.event.pull_request.head.repo.fork)
+        env:
+          GITHUB_TOKEN: ${{steps.token.outputs.token}}
+
+      - name: Test -lock and -close options
+        run: sort-issue-template run -lock never -close never https://github.com/suzuki-shunsuke/test-sort-issue-template/discussions/1
+        if: |
+          !(github.event_name == 'pull_request' && github.event.pull_request.head.repo.fork)
+        env:
+          GITHUB_TOKEN: ${{steps.token.outputs.token}}
+
+      - name: Test -lock-discussion and -close-discussion options
+        run: sort-issue-template run -lock-discussion -close-discussion https://github.com/suzuki-shunsuke/test-sort-issue-template/discussions/102
+        if: |
+          !(github.event_name == 'pull_request' && github.event.pull_request.head.repo.fork)
+        env:
+          GITHUB_TOKEN: ${{steps.token.outputs.token}}
+
+      - name: Test create-config
+        run: sort-issue-template create-config
+      - run: cat sort-issue-template.yaml
