@@ -3,6 +3,7 @@ package cli
 import (
 	"bufio"
 	"context"
+	"errors"
 	"flag"
 	"fmt"
 	"io"
@@ -59,12 +60,24 @@ Options:
 	-editor		Editor to sort issue templates
 	-separator 	Separator in file names`
 
+const header = `# https://github.com/suzuki-shunsuke/sort-issue-template
+# sort-issue-template created this temporary file and opened it using the editor.
+# Please change the order of lines to change the order of issue templates.
+# Save and close the editor, then issue templates will be renamed.
+# Lines starting with # are comments and are ignored.
+# If you want to cancel the change, please remove all lines and save and close the file.
+`
+
 func (r *Runner) Run(ctx context.Context, _ ...string) error { //nolint:funlen,cyclop
 	flg := &Flag{}
 	parseFlags(flg)
 	if flg.Version {
 		fmt.Fprintln(r.Stdout, r.LDFlags.Version)
 		return nil
+	}
+	allowedSeparator := regexp.MustCompile(`[-_.]+`)
+	if !allowedSeparator.MatchString(flg.Separator) {
+		return errors.New(`the separator must match with the regular expression [-_.]+`)
 	}
 	if flg.Help {
 		fmt.Fprintln(r.Stdout, help)
@@ -84,7 +97,7 @@ func (r *Runner) Run(ctx context.Context, _ ...string) error { //nolint:funlen,c
 	defer tempFile.Close()
 	defer os.Remove(tempFileName)
 	// Write issue template file names to the temporary file
-	if err := os.WriteFile(tempFileName, []byte(strings.Join(files, "\n")), 0o644); err != nil { //nolint:mnd,gosec
+	if err := os.WriteFile(tempFileName, []byte(header+strings.Join(files, "\n")), 0o644); err != nil { //nolint:mnd,gosec
 		return fmt.Errorf("write the issue template file names to the temporary file: %w", err)
 	}
 	// Open the temporary file using the editor
@@ -116,10 +129,7 @@ func (r *Runner) Run(ctx context.Context, _ ...string) error { //nolint:funlen,c
 	}
 
 	afterFilenames := make([]string, size)
-	filenamePattern, err := regexp.Compile(`^(\d+)` + flg.Separator + `(.+)$`)
-	if err != nil {
-		return fmt.Errorf("compile the regular expression: %w", err)
-	}
+	filenamePattern := regexp.MustCompile(`^(\d+)[-_.]+(.+)$`)
 	for i, fileName := range fileNames {
 		afterFilename := getNewFilename(fileName, filenamePattern, i+1, pd, flg.Separator)
 		afterFilenames[i] = afterFilename
