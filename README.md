@@ -33,7 +33,7 @@ Please commit the change using Git and push the change to the default branch.
 ### Cancel the change
 
 After a text editor is launched, you may want to cancel the change.
-In that case, please don't edit the file or delete all lines.
+In that case, please delete all lines in the temporary file and save and close it.
 Then issue templates aren't changed.
 
 ### Change the editor
@@ -56,6 +56,9 @@ Change the separator from `-` (default) to `_`:
 ```sh
 sort-issue-template -separator _
 ```
+
+Separator must match with the regular expression `[-_.]*`.
+sort-issue-template detects the separator in current template file names automatically.
 
 ## Example
 
