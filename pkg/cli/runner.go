@@ -129,10 +129,7 @@ func (r *Runner) Run(ctx context.Context, _ ...string) error { //nolint:funlen,c
 	}
 
 	afterFilenames := make([]string, size)
-	filenamePattern, err := regexp.Compile(`^(\d+)[-_.]+(.+)$`)
-	if err != nil {
-		return fmt.Errorf("compile the regular expression: %w", err)
-	}
+	filenamePattern := regexp.MustCompile(`^(\d+)[-_.]+(.+)$`)
 	for i, fileName := range fileNames {
 		afterFilename := getNewFilename(fileName, filenamePattern, i+1, pd, flg.Separator)
 		afterFilenames[i] = afterFilename
