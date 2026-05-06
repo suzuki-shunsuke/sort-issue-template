@@ -13,11 +13,13 @@ linters:
     - lll
     - musttag
     - nlreturn
+    - noinlineerr
     - nonamedreturns
     - tagalign
     - tagliatelle
     - varnamelen
     - wsl
+    - wsl_v5
   exclusions:
     generated: lax
     presets:
